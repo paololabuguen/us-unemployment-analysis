@@ -1,0 +1,37 @@
+/* Add custom CSS styles for your page layout here */
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: rgb(145, 145, 145);
+}
+
+/* Add CSS styles for your visualizations here */
+/* Visualization 1 */
+#bar-graph {
+    position: absolute;
+    top: 20%;
+    left:2%;
+    bottom: 0%;
+    height: 77%;
+    width: 96%;
+}
+
+/* Visualization 2 */
+#visualization-2 {
+    /* Add styles for the second visualization */
+}
+
+/* Visualization 3 */
+#visualization-3 {
+    /* Add styles for the third visualization */
+}
+
+.text-head {
+    text-align: center;
+    color: rgb(0, 0, 0);
+    text-shadow: dimgrey;
+    text-decoration-line: inherit;
+    font-family: Cambria, serif;
+}
