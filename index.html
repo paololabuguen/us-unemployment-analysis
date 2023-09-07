@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>US Unemployment Rates</title>
+  <!-- Include Plotly CSS -->
+  <link rel="stylesheet" href="https://cdn.plot.ly/plotly-latest.min.css">
+  <!-- D3 library -->
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <!-- Our CSS -->
+  <link rel="stylesheet" type="text/css" href="css/style.css">
+  <!-- Chart.js library -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Our Javascript code -->
+  <script type="text/javascript" src="js/script.js"></script>
+</head>
+
+<body>
+  <div class="row">
+    <div class="title-head">
+      <div class="text-head">
+        <h1>US Unemployment Rates</h1>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dropdown for the start year -->
+  <label class="dropdown-list-label" for="dropdown-list-st-year">Start Year</label>
+  <select id="dropdown-list-st-year" onchange="optionChanged(this.value)"></select>
+
+  <!-- Dropdown for the end year -->
+  <label class="dropdown-list-label" for="dropdown-list-end-year">End Year</label>
+  <select id="dropdown-list-end-year" onchange="optionChanged(this.value)"></select>
+  
+  <!-- Dropdown for the data -->
+  <label class="dropdown-list-label" for="dropdown-list-data">End Year</label>
+  <select id="dropdown-list-data" onchange="optionChanged(this.value)"></select>
+
+  <div id="bar-graph"></div>
+
+  <div id="graph-2">
+    <!-- Placeholder for graph 2 -->
+  </div>
+
+  <div id="graph-3">
+    <!-- Placeholder for graph 3 -->
+  </div>
+
+</body>
+
+</html>
