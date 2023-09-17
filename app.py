@@ -16,10 +16,10 @@ import json
 #####################################################
 engine = create_engine("sqlite:///data/unemployment.db")
 
-# reflect an existing database into a new model
+# Reflect an existing database into a new model
 Base = automap_base()
 
-# reflect the tables
+# Reflect the tables
 Base.prepare(autoload_with=engine)
 
 # Create an app
@@ -51,10 +51,10 @@ all_columns.remove('age_20plus_rate')
 # all_columns = ['date', 'overall_rate', 'age_16_17_rate', 'age_16_19_rate', 'age_18_19_rate', 'age_16_24_rate', 'age_20_24_rate',
 #                'age_25_34_rate', 'age_25_54_rate', 'age_35_44_rate', 'age_45_54_rate', 'age_25plus_rate', 'age_55plus_rate']
 
-# Short form of the columns 
+# Short form of the columns
 all_columns_short = {"overall_rate": "Overall Rate", "16_17": "Age 16-17", "16_19": "Age 16-19", "16_24": "Age 16-24", "18_19": "Age 18-19",
-                      "20_24": "Age 20-24", "25_34": "Age 25-34", "25_54": "Age 25-54", "35_44": "Age 35-44", "45_54": "Age 45-54",
-                        "25plus": "Age 25+", "55plus": "Age 55+"}
+                     "20_24": "Age 20-24", "25_34": "Age 25-34", "25_54": "Age 25-54", "35_44": "Age 35-44", "45_54": "Age 45-54",
+                     "25plus": "Age 25+", "55plus": "Age 55+"}
 
 
 # List of all column names for data for men
@@ -99,7 +99,8 @@ def home():
             "/api/v1.0/unemployment_rate/(year) (Returns unemployment rate depending on (year) by month)<br/>"
             "/api/v1.0/unemployment_rate/(year)/(data) (Returns unemployment rate of age range (data) depending on (year) by month)<br/>"
             "/api/v1.0/unemployment_rate/s/(year)/(sex) (Returns unemployment rate of (sex) depending on (year) by month)<br/>"
-            "/api/v1.0/unemployment_rate/y/(start_year)/(end_year)/(data) (Returns unemployment rate of (data) for men and women from (start_year) to (end_year))<br/><br/>"
+            "/api/v1.0/unemployment_rate/y/(start_year)/(end_year)/(data) (Returns unemployment rate of (data) for men and women from (start_year) to (end_year))<br/>"
+            "/api/v1.0/unemployment_rate/top10/(start_year)/(end_year)/(data) (Returns top 10 months with highest unemployment rate of (data) for men and women from (start_year) to (end_year))<br/><br/>"
             "Available options for (data):<br/>"
             "overall_rate<br/>"
             "16_17<br/>"
@@ -120,6 +121,7 @@ def home():
 ######   Route for list of years   ######
 ######                             ######
 #########################################
+
 @app.route("/api/v1.0/year_data_list")
 def years_list():
     year_data_list = [{}]
@@ -128,18 +130,20 @@ def years_list():
     year_data_list[0]["data"] = data_dict
     return jsonify(year_data_list)
 
+
 ##################################################
 ######                                      ######
 ######   Route for data depending on year   ######
 ######                                      ######
 ##################################################
+
 @app.route("/api/v1.0/unemployment_rate/<year>")
 def all_data(year):
 
     # Check if the year selected is available
     if year not in year_list:
         return jsonify("Error: The (year) you have selected is not in the available options")
-    
+
     # Create a Session to connect to DB
     session = Session(engine)
 
@@ -147,7 +151,9 @@ def all_data(year):
     columns = [getattr(Unemployment_Rate, col) for col in all_columns]
 
     # Query the wanted results
-    results = session.query(*columns).filter(Unemployment_Rate.date.like(f"{year}%")).all()
+    results = session.query(*columns)\
+        .filter(Unemployment_Rate.date.like(f"{year}%"))\
+        .all()
 
     # Close the session
     session.close()
@@ -181,31 +187,32 @@ def all_data(year):
 def year_data(year, data):
 
     # Check if the data selected exists
-    if data =="overall_rate":
+    if data == "overall_rate":
 
         # These are the strings to input for the column name later on
         data_str = "overall_rate"
         title = f"Overall unemployment rate from in {year} by month"
-    
+
     elif data in list(all_columns_short.keys())[1:]:
 
         # These are the strings to input for the column name later on
         data_str = "age_" + data + "_rate"
         title = f"Unemployment rate for {data} in {year} by month"
-    
+
     else:
         return jsonify("Error: The (data) you have selected is not in the available options")
 
     # Check if the year selected is available
     if year not in year_list:
         return jsonify("Error: The (year) you have selected is not in the available options")
-    
+
     # Create a Session to connect to DB
     session = Session(engine)
 
     # Query the wanted results
-    results = session.query(Unemployment_Rate.date, getattr(Unemployment_Rate, data_str)).filter(
-        Unemployment_Rate.date.like(f"{year}%")).all()
+    results = session.query(Unemployment_Rate.date, getattr(Unemployment_Rate, data_str))\
+        .filter(Unemployment_Rate.date.like(f"{year}%"))\
+        .all()
 
     # Close the session
     session.close()
@@ -237,7 +244,7 @@ def data_year_sex(year, sex):
     # Check if the year selected is available
     if year not in year_list:
         return jsonify("Error: The (year) you have selected is not in the available options")
-    
+
     # Options for sex category
     men_names = ["men", "male", "m"]
     women_names = ["women", "female", "f", "w"]
@@ -249,10 +256,13 @@ def data_year_sex(year, sex):
         session = Session(engine)
 
         # List of all columns for data for women
-        men_columns = [getattr(Unemployment_Rate_M, col) for col in all_columns_m]
+        men_columns = [getattr(Unemployment_Rate_M, col)
+                       for col in all_columns_m]
 
         # Query the wanted results
-        results = session.query(*men_columns).filter(Unemployment_Rate_M.date.like(f"{year}%")).all()
+        results = session.query(*men_columns)\
+            .filter(Unemployment_Rate_M.date.like(f"{year}%"))\
+            .all()
 
         # Close the session
         session.close()
@@ -272,7 +282,8 @@ def data_year_sex(year, sex):
                 date = pd.to_datetime(row.date)
 
                 # Looks like "January": value in the dictionary
-                unemp_rate[0][all_columns_m[i]][month_dict[date.month]] = row[i]
+                unemp_rate[0][all_columns_m[i]
+                              ][month_dict[date.month]] = row[i]
 
         return jsonify(unemp_rate)
 
@@ -283,11 +294,14 @@ def data_year_sex(year, sex):
         session = Session(engine)
 
         # List of all columns for data for women
-        women_columns = [getattr(Unemployment_Rate_W, col) for col in all_columns_w]
+        women_columns = [getattr(Unemployment_Rate_W, col)
+                         for col in all_columns_w]
 
         # Query the wanted results
-        results = session.query(*women_columns).filter(Unemployment_Rate_W.date.like(f"{year}%")).all()
-        
+        results = session.query(*women_columns)\
+            .filter(Unemployment_Rate_W.date.like(f"{year}%"))\
+            .all()
+
         # Close the session
         session.close()
 
@@ -306,7 +320,8 @@ def data_year_sex(year, sex):
             for i in range(1, len(all_columns_w)):
 
                 # Looks like "January": value in the dictionary
-                unemp_rate[0][month_dict[date.month]][all_columns_w[i]] = row[i]
+                unemp_rate[0][month_dict[date.month]
+                              ][all_columns_w[i]] = row[i]
 
         return jsonify(unemp_rate)
 
@@ -327,14 +342,14 @@ def data_year_sex(year, sex):
 def all_data_st_end_year(start_year="1948", end_year="2023", data="overall_rate"):
 
     # Check if the data selected exists
-    if data =="overall_rate":
+    if data == "overall_rate":
 
         # These are the strings to input for the column name later on
         data_str_overall = "overall_rate"
         data_str_m = "men_rate"
         data_str_w = "women_rate"
         title = f"Average overall unemployment rate from {start_year} to {end_year}"
-    
+
     elif data in list(all_columns_short.keys())[1:]:
 
         # These are the strings to input for the column name later on
@@ -343,7 +358,7 @@ def all_data_st_end_year(start_year="1948", end_year="2023", data="overall_rate"
         data_str_w = "women_" + data + "_rate"
         data_index = list(all_columns_short.keys()).index(data)
         title = f"Average unemployment rate for {list(all_columns_short.values())[data_index]} from {start_year} to {end_year}"
-    
+
     else:
         return jsonify("Error: The (data) you have selected is not in the available options")
 
@@ -354,8 +369,7 @@ def all_data_st_end_year(start_year="1948", end_year="2023", data="overall_rate"
         return jsonify("Error: The (start_year) you have selected is not in the available options")
     elif end_year not in year_list:
         return jsonify("Error: The (end_year) you have selected is not in the available options")
-    
-    
+
     # Dictionary to jsonify with title
     unemp_rate_m_w = [{"title": title}]
 
@@ -376,18 +390,160 @@ def all_data_st_end_year(start_year="1948", end_year="2023", data="overall_rate"
 
         # Query the data based on the starting year and the ending year and data
         results_overall = session.query(func.avg(getattr(Unemployment_Rate, data_str_overall)))\
-            .filter(Unemployment_Rate.date >= start_date).filter(Unemployment_Rate.date <= end_date).all()[0][0]
+            .filter(Unemployment_Rate.date >= start_date)\
+            .filter(Unemployment_Rate.date <= end_date)\
+            .all()[0][0]
 
         results_men = session.query(func.avg(getattr(Unemployment_Rate_M, data_str_m)))\
-            .filter(Unemployment_Rate_M.date >= start_date).filter(Unemployment_Rate_M.date <= end_date).all()[0][0]
+            .filter(Unemployment_Rate_M.date >= start_date)\
+            .filter(Unemployment_Rate_M.date <= end_date)\
+            .all()[0][0]
 
         results_women = session.query(func.avg(getattr(Unemployment_Rate_W, data_str_w)))\
-            .filter(Unemployment_Rate_W.date >= start_date).filter(Unemployment_Rate_W.date <= end_date).all()[0][0]
-        
+            .filter(Unemployment_Rate_W.date >= start_date)\
+            .filter(Unemployment_Rate_W.date <= end_date)\
+            .all()[0][0]
+
         # Add the current data to the initial dictionary to jsonify
         unemp_rate_m_w[0]["overall"][str(i)] = results_overall
         unemp_rate_m_w[0]["men"][str(i)] = results_men
         unemp_rate_m_w[0]["women"][str(i)] = results_women
+
+    # Close the session
+    session.close()
+
+    return jsonify(unemp_rate_m_w)
+
+
+###################################################################
+######                                                       ######
+######   Route for top 10 months highest unemployment rate   ######
+######                                                       ######
+###################################################################
+
+@app.route("/api/v1.0/unemployment_rate/top10/")
+@app.route("/api/v1.0/unemployment_rate/top10/<start_year>/")
+@app.route("/api/v1.0/unemployment_rate/top10/<start_year>/<end_year>")
+@app.route("/api/v1.0/unemployment_rate/top10/<start_year>/<end_year>/<data>")
+def top_10_months_by_years(start_year="1948", end_year="2023", data="overall_rate"):
+    # Check if the data selected exists
+    if data == "overall_rate":
+
+        # These are the strings to input for the column name later on
+        data_str_overall = "overall_rate"
+        data_str_m = "men_rate"
+        data_str_w = "women_rate"
+        title = f"Top 10 months with highest unemployment rate from {start_year} to {end_year}"
+
+    elif data in list(all_columns_short.keys())[1:]:
+
+        # These are the strings to input for the column name later on
+        data_str_overall = "age_" + data + "_rate"
+        data_str_m = "men_" + data + "_rate"
+        data_str_w = "women_" + data + "_rate"
+        data_index = list(all_columns_short.keys()).index(data)
+        title = f"Top 10 months with highest unemployment rate for {list(all_columns_short.values())[data_index]} from {start_year} to {end_year}"
+
+    else:
+        return jsonify("Error: The (data) you have selected is not in the available options")
+
+    # Give an error if start year is less than end year
+    if int(start_year) > int(end_year):
+        return jsonify("Error: The (start_year) must be less than (end_year)")
+    
+    # Check if the year selected is available
+    elif start_year not in year_list:
+        return jsonify("Error: The (start_year) you have selected is not in the available options")
+    elif end_year not in year_list:
+        return jsonify("Error: The (end_year) you have selected is not in the available options")
+
+    # Dictionary to jsonify with title
+    unemp_rate_m_w = [{"title": title}]
+
+    # Dictionary for men and women data to jsonify
+    unemp_rate_m_w[0]["overall"] = {}
+    unemp_rate_m_w[0]["men"] = {}
+    unemp_rate_m_w[0]["women"] = {}
+
+    # Create a Session Object to Connect to DB
+    session = Session(engine)
+
+    # The date string is formatted yyyy-mm-dd so we define the strings below to use to filter dates
+    start_date = start_year + "-01-01"
+    end_date = end_year + "-12-01"
+
+    # Query the date and data columns based on the starting year and the ending year and data
+    results_overall = session.query(getattr(Unemployment_Rate, 'date'), getattr(Unemployment_Rate, data_str_overall))\
+        .filter(Unemployment_Rate.date >= start_date)\
+        .filter(Unemployment_Rate.date <= end_date)\
+        .order_by(getattr(Unemployment_Rate, data_str_overall).desc())\
+        .limit(10)\
+        .all()
+
+    # List of all the dates in results_overall
+    year_list_overall = [row[0] for row in results_overall]
+
+    # List of all the date in results_overall
+    data_list_overall = [row[1] for row in results_overall]
+
+    # Query the date and data columns based on the starting year and the ending year and data
+    results_men = session.query(getattr(Unemployment_Rate_M, 'date'), getattr(Unemployment_Rate_M, data_str_m))\
+        .filter(Unemployment_Rate_M.date >= start_date).filter(Unemployment_Rate_M.date <= end_date)\
+        .order_by(getattr(Unemployment_Rate_M, data_str_m).desc())\
+        .limit(10)\
+        .all()
+
+    # List of all the dates in results_men
+    year_list_m = [row[0] for row in results_men]
+
+    # List of all the date in results_men
+    data_list_m = [row[1] for row in results_men]
+
+    # Query the date and data columns based on the starting year and the ending year and data
+    results_women = session.query(getattr(Unemployment_Rate_W, 'date'), getattr(Unemployment_Rate_W, data_str_w))\
+        .filter(Unemployment_Rate_W.date >= start_date)\
+        .filter(Unemployment_Rate_W.date <= end_date)\
+        .order_by(getattr(Unemployment_Rate_W, data_str_w).desc())\
+        .limit(10)\
+        .all()
+
+    # List of all the dates in results_women
+    year_list_w = [row[0] for row in results_women]
+
+    # List of all the date in results_women
+    data_list_w = [row[1] for row in results_women]
+
+
+    # These for loops are to format the json look nice and append the data to the list we're jsonifying
+    for i in range(len(year_list_overall)):
+        # Convert the date to datetime to get the month and year
+        cur_date = pd.to_datetime(year_list_overall[i])
+        year = str(cur_date.year)
+        month = month_dict[cur_date.month]
+        date_string = f"{month} {year}"
+
+        # Add the current data to the initial dictionary to jsonify
+        unemp_rate_m_w[0]["overall"][date_string] = data_list_overall[i]
+
+    for i in range(len(year_list_m)):
+        # Convert the date to datetime to get the month and year
+        cur_date = pd.to_datetime(year_list_m[i])
+        year = str(cur_date.year)
+        month = month_dict[cur_date.month]
+        date_string = f"{month} {year}"
+
+        # Add the current data to the initial dictionary to jsonify
+        unemp_rate_m_w[0]["men"][date_string] = data_list_m[i]
+
+    for i in range(len(year_list_w)):
+        # Convert the date to datetime to get the month and year
+        cur_date = pd.to_datetime(year_list_w[i])
+        year = str(cur_date.year)
+        month = month_dict[cur_date.month]
+        date_string = f"{month} {year}"
+
+        # Add the current data to the initial dictionary to jsonify
+        unemp_rate_m_w[0]["women"][date_string] = data_list_w[i]
 
     # Close the session
     session.close()
