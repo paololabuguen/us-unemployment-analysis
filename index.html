@@ -5,50 +5,83 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>US Unemployment Rates</title>
+
   <!-- Include Plotly CSS -->
   <link rel="stylesheet" href="https://cdn.plot.ly/plotly-latest.min.css">
+
   <!-- D3 library -->
   <script src="https://d3js.org/d3.v7.min.js"></script>
   <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
   <!-- Our CSS -->
   <link rel="stylesheet" type="text/css" href="css/style.css">
+
   <!-- Chart.js library -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Version 3.9.1 -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
   <!-- Our Javascript code -->
   <script type="text/javascript" src="js/script.js"></script>
 </head>
 
 <body>
-  <div class="row">
+  <!-- Container for the header elements -->
+  <div class="header-row">
     <div class="title-head">
       <div class="text-head">
-        <h1>US Unemployment Rates</h1>
+        <h1>US Unemployment Rates Analysis</h1>
       </div>
+    </div>
+
+    <!-- Container for the dropdown row -->
+    <div class="dropdown-row">
+
+      <!-- Dropdown for the start year -->
+      <label class="dropdown-list-label" for="dropdown-list-st-year">Start Year</label>
+      <select class="dropdown" id="dropdown-list-st-year" onchange="optionChanged(this.value)"></select>
+
+      <!-- Dropdown for the end year -->
+      <label class="dropdown-list-label" for="dropdown-list-end-year">End Year</label>
+      <select class="dropdown" id="dropdown-list-end-year" onchange="optionChanged(this.value)"></select>
+
+      <!-- Dropdown for the data -->
+      <label class="dropdown-list-label" for="dropdown-list-data">Age Range</label>
+      <select class="dropdown" id="dropdown-list-data" onchange="optionChanged(this.value)"></select>
+
     </div>
   </div>
 
-  <!-- Dropdown for the start year -->
-  <label class="dropdown-list-label" for="dropdown-list-st-year">Start Year</label>
-  <select id="dropdown-list-st-year" onchange="optionChanged(this.value)"></select>
+  <!-- Container for the body -->
+  <!-- This was made to make the body appear below the fixed header -->
+  <div class="body-graphs">
+    <div class="row-bar">
+      <div class="container-graph-bar">
+        <canvas id="bar-chart"></canvas>
+      </div>
+      <div class="top-10-background">
+        <div class="list-header">
+          <div class="text-list">
+            <h3 class="top-10-list-header" >Top 10 Months with Highest Unemployment Rate</h3>
+            <hr class="below-text-list">
+          </div>
+        </div>
+        <div class="top-10-list-container" id="top-10-list">
+          <div class="top-10-grid" id="top-10-left"></div>
+          <div class="top-10-grid" id="top-10-right"></div>
+        </div>
+      </div>
+    </div>
 
-  <!-- Dropdown for the end year -->
-  <label class="dropdown-list-label" for="dropdown-list-end-year">End Year</label>
-  <select id="dropdown-list-end-year" onchange="optionChanged(this.value)"></select>
-  
-  <!-- Dropdown for the data -->
-  <label class="dropdown-list-label" for="dropdown-list-data">End Year</label>
-  <select id="dropdown-list-data" onchange="optionChanged(this.value)"></select>
+    <div class="container-graph-2">
+      <div id="graph-2">
+        <!-- Placeholder for graph 2 -->
 
-  <div id="bar-graph"></div>
+      </div>
+    </div>
 
-  <div id="graph-2">
-    <!-- Placeholder for graph 2 -->
+    <div id="graph-3">
+      <!-- Placeholder for graph 3 -->
+    </div>
   </div>
-
-  <div id="graph-3">
-    <!-- Placeholder for graph 3 -->
-  </div>
-
 </body>
 
 </html>
