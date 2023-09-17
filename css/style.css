@@ -14,6 +14,8 @@ body {
 .body-graphs {
     margin-top: 20vh;
 }
+
+
 .row-bar {
     height: 80vh;
     max-height: 1000px;
@@ -22,6 +24,7 @@ body {
     grid-template-columns: 1fr 1fr; 
     grid-gap: 3vw;
 }
+
 /* Container for the bar graph */
 .container-graph-bar {
 
@@ -40,18 +43,6 @@ body {
     border-radius: 3px;
 }
 
-hr.below-text-list {
-    border: 1px solid black;
-    margin: 1px;
-}
-
-/* Container for the dropdown label and the dropdowns */
-.dropdown-row {
-    width: 100%;
-    height: 45px;
-    text-align: center;
-    padding-top: 20px;
-}
 /* Add CSS styles for your visualizations here */
 /* Visualization 1 */
 #bar-chart {
@@ -74,6 +65,18 @@ hr.below-text-list {
     /* Add styles for the third visualization */
 }
 
+/* ------------------------------------------------------------ */
+/* ------------------ Dropdown list elements ------------------ */
+/* ------------------------------------------------------------ */
+
+/* Container for the dropdown label and the dropdowns */
+.dropdown-row {
+    width: 100%;
+    height: 45px;
+    text-align: center;
+    padding-top: 20px;
+}
+
 /* Dropdown label */
 .dropdown-list-label {
     padding: 5px;
@@ -84,7 +87,9 @@ hr.below-text-list {
     margin-right: 20px;
 }
 
-/* Header */
+/* ---------------------------------------------------- */
+/* ------------------ Header elements ------------------*/
+/* ---------------------------------------------------- */
 .header-row {
 
     /* Dimensions */
@@ -119,9 +124,9 @@ hr.below-text-list {
     font-family: Arial, Helvetica, sans-serif;
 }
 
-/* ------------------------------------------------------------------- */
-/* ------------------ Container for the top 10 lists ------------------*/
-/* ------------------------------------------------------------------- */
+/* --------------------------------------------------------- */
+/* ------------------ Top 10 list elements ------------------*/
+/* --------------------------------------------------------- */
 
 .top-10-background {
     position: fixed;
@@ -168,6 +173,12 @@ hr.below-text-list {
     margin-bottom: 10px;
 }
 
+/* Line below the header  */
+hr.below-text-list {
+    border: 1px solid black;
+    margin: 1px;
+}
+/* Container for the overall, men and women lists */
 .top-10-grid {
     width: 85%;
     min-width: 12px;
