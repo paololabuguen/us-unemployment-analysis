@@ -15,11 +15,13 @@ body {
     margin-top: 20vh;
 }
 
-
+/* -------------------------------------------------------- */
+/* ------------------ Bar graph styles -------------------- */
+/* -------------------------------------------------------- */
 .row-bar {
     height: 80vh;
     max-height: 1000px;
-    width: 100vw;
+    width: 100%;
     display: grid;
     grid-template-columns: 1fr 1fr; 
     grid-gap: 3vw;
@@ -33,7 +35,7 @@ body {
     min-width: 500px;
     height: 70vh;
     min-height: 600px;  
-    margin-left: 3vw;
+    margin-left: 4vw;
     margin-right: 25vw;
 
     /* Border */
@@ -50,23 +52,8 @@ body {
     height: 700px;
 }
 
-/* Visualization 2 */
-/* #graph-2 {
-    width: 70vw; 
-    height: 70vh;
-    margin: 50px;
-    border: 1px solid #ccc;
-    background-color: rgba(255, 199, 115, 0.705);
-    text-align: center;
-} */
-
-/* Visualization 3 */
-#visualization-3 {
-    /* Add styles for the third visualization */
-}
-
 /* ------------------------------------------------------------ */
-/* ------------------ Dropdown list elements ------------------ */
+/* ------------------ Dropdown list styles -------------------- */
 /* ------------------------------------------------------------ */
 
 /* Container for the dropdown label and the dropdowns */
@@ -88,7 +75,7 @@ body {
 }
 
 /* ---------------------------------------------------- */
-/* ------------------ Header elements ------------------*/
+/* ------------------ Header styles --------------------*/
 /* ---------------------------------------------------- */
 .header-row {
 
@@ -128,7 +115,7 @@ body {
 /* ------------------ Top 10 list elements ------------------*/
 /* --------------------------------------------------------- */
 
-.top-10-background {
+.top-months-background {
     position: fixed;
     /* Dimensions */
     width: 19vw;
@@ -144,17 +131,18 @@ body {
     border: 1px solid #000000;
     border-radius: 3px;
     display: inline-block;
+    overflow: auto;
 }
 
 /* Style for the list elements */
-.top-10-list-element {
+.top-months-list-element {
     margin-top: 5px;
     margin-bottom: 5px;
     font-size: 14px;
+    text-align: right;
 }
 
-/*  */
-.top-10-list-container {
+.top-months-list-container {
     margin-top: 10px;
     margin-bottom: 5px;
     display: grid;
@@ -162,12 +150,26 @@ body {
     grid-gap: 5px;
 }
 
-.top-10-list-header {
-    margin-top: 0px;
-    font-size: 20px;
+/* Container for the overall, men and women lists */
+.top-months-grid {
+    width: 85%;
+    min-width: 12px;
+    padding: 10px;
 }
 
-.top-10-overall-header {
+#top-months-left {
+    border-right: 1px solid black;
+}
+
+/* The classes and ids below  until the next section were 
+written into the inner HTML in script.js*/
+.top-months-list-header {
+    margin-top: 0px;
+    font-size: 20px;
+    padding-top: 10px;
+}
+
+.top-months-overall-header {
     font-weight: bold;
     margin-top: 10px;
     margin-bottom: 10px;
@@ -178,9 +180,15 @@ hr.below-text-list {
     border: 1px solid black;
     margin: 1px;
 }
-/* Container for the overall, men and women lists */
-.top-10-grid {
-    width: 85%;
-    min-width: 12px;
-    padding: 10px;
+
+#women-list {
+    margin-top: 15px;
+}
+
+/* --------------------------------------------------------- */
+/* ------------------ Line graph styles -------------------- */
+/* --------------------------------------------------------- */
+
+#graph-2 {
+    margin-bottom: 51px;
 }
