@@ -100,7 +100,7 @@ def home():
             "/api/v1.0/unemployment_rate/(year)/(data) (Returns unemployment rate of age range (data) depending on (year) by month)<br/>"
             "/api/v1.0/unemployment_rate/s/(year)/(sex) (Returns unemployment rate of (sex) depending on (year) by month)<br/>"
             "/api/v1.0/unemployment_rate/y/(start_year)/(end_year)/(data) (Returns unemployment rate of (data) for men and women from (start_year) to (end_year))<br/>"
-            "/api/v1.0/unemployment_rate/top10/(start_year)/(end_year)/(data) (Returns top 10 months with highest unemployment rate of (data) for men and women from (start_year) to (end_year))<br/><br/>"
+            "/api/v1.0/unemployment_rate/top_months/(start_year)/(end_year)/(data) (Returns top months with highest unemployment rate of (data) for men and women from (start_year) to (end_year))<br/><br/>"
             "Available options for (data):<br/>"
             "overall_rate<br/>"
             "16_17<br/>"
@@ -348,7 +348,7 @@ def all_data_st_end_year(start_year="1948", end_year="2023", data="overall_rate"
         data_str_overall = "overall_rate"
         data_str_m = "men_rate"
         data_str_w = "women_rate"
-        title = f"Average overall unemployment rate from {start_year} to {end_year}"
+        title = f"Average Annual Overall Unemployment Rate from {start_year} to {end_year}"
 
     elif data in list(all_columns_short.keys())[1:]:
 
@@ -357,7 +357,7 @@ def all_data_st_end_year(start_year="1948", end_year="2023", data="overall_rate"
         data_str_m = "men_" + data + "_rate"
         data_str_w = "women_" + data + "_rate"
         data_index = list(all_columns_short.keys()).index(data)
-        title = f"Average unemployment rate for {list(all_columns_short.values())[data_index]} from {start_year} to {end_year}"
+        title = f"Average Annual Unemployment Rate from {start_year} to {end_year} for {list(all_columns_short.values())[data_index]}"
 
     else:
         return jsonify("Error: The (data) you have selected is not in the available options")
@@ -415,17 +415,17 @@ def all_data_st_end_year(start_year="1948", end_year="2023", data="overall_rate"
     return jsonify(unemp_rate_m_w)
 
 
-###################################################################
-######                                                       ######
-######   Route for top 10 months highest unemployment rate   ######
-######                                                       ######
-###################################################################
+################################################################
+######                                                    ######
+######   Route for top months highest unemployment rate   ######
+######                                                    ######
+################################################################
 
-@app.route("/api/v1.0/unemployment_rate/top10/")
-@app.route("/api/v1.0/unemployment_rate/top10/<start_year>/")
-@app.route("/api/v1.0/unemployment_rate/top10/<start_year>/<end_year>")
-@app.route("/api/v1.0/unemployment_rate/top10/<start_year>/<end_year>/<data>")
-def top_10_months_by_years(start_year="1948", end_year="2023", data="overall_rate"):
+@app.route("/api/v1.0/unemployment_rate/top_months/")
+@app.route("/api/v1.0/unemployment_rate/top_months/<start_year>/")
+@app.route("/api/v1.0/unemployment_rate/top_months/<start_year>/<end_year>")
+@app.route("/api/v1.0/unemployment_rate/top_months/<start_year>/<end_year>/<data>")
+def top_unemp_rate_months_by_years(start_year="1948", end_year="2023", data="overall_rate"):
     # Check if the data selected exists
     if data == "overall_rate":
 
@@ -433,7 +433,7 @@ def top_10_months_by_years(start_year="1948", end_year="2023", data="overall_rat
         data_str_overall = "overall_rate"
         data_str_m = "men_rate"
         data_str_w = "women_rate"
-        title = f"Top 10 months with highest unemployment rate from {start_year} to {end_year}"
+        title = f"Top Months with Highest Overall Unemployment Rate from {start_year} to {end_year}"
 
     elif data in list(all_columns_short.keys())[1:]:
 
@@ -442,7 +442,7 @@ def top_10_months_by_years(start_year="1948", end_year="2023", data="overall_rat
         data_str_m = "men_" + data + "_rate"
         data_str_w = "women_" + data + "_rate"
         data_index = list(all_columns_short.keys()).index(data)
-        title = f"Top 10 months with highest unemployment rate for {list(all_columns_short.values())[data_index]} from {start_year} to {end_year}"
+        title = f"Top Months with Highest Unemployment Rate from {start_year} to {end_year} for {list(all_columns_short.values())[data_index]}"
 
     else:
         return jsonify("Error: The (data) you have selected is not in the available options")
@@ -477,7 +477,7 @@ def top_10_months_by_years(start_year="1948", end_year="2023", data="overall_rat
         .filter(Unemployment_Rate.date >= start_date)\
         .filter(Unemployment_Rate.date <= end_date)\
         .order_by(getattr(Unemployment_Rate, data_str_overall).desc())\
-        .limit(10)\
+        .limit(20)\
         .all()
 
     # List of all the dates in results_overall
