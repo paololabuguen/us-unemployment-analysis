@@ -279,13 +279,13 @@ function overallUnemploymentChart(startDate = initParams[0], endDate = initParam
     return barChart
 }
 
-//----------------------------------------------------------------------------------------------------------------------
-//------------------- Function that lists top 10 months with the highest unemployment rate -----------------------------
-//----------------------------------------------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------------------------------
+//------------------- Function that lists top months with the highest unemployment rate -----------------------------
+//-------------------------------------------------------------------------------------------------------------------
 
-function top10UnemploymentRate(startDate = initParams[0], endDate = initParams[1], filter = initParams[2]) {
+function topMonthsUnemploymentRate(startDate = initParams[0], endDate = initParams[1], filter = initParams[2]) {
     // Define the url link for the top10 data
-    let urlString = `${link}top10/${startDate}/${endDate}/${filter}`;
+    let urlString = `${link}top_months/${startDate}/${endDate}/${filter}`;
 
 
     d3.json(urlString).then(data => {
@@ -303,29 +303,48 @@ function top10UnemploymentRate(startDate = initParams[0], endDate = initParams[1
         // These are to add to the html code on the right side of the screen
         // This would show the list of top 10 overall, men and women unemployment rates
         // The list header has class top-10-overall-header
-        let dataListOverall = "<p class=\"top-10-overall-header\">Overall: </p>";
-        let dataListMen = "<p class=\"top-10-overall-header\">Men: </p>";
-        let dataListWomen = "<p class=\"top-10-overall-header\">Women: </p>";
+        let dataListOverall = "<p class=\"top-months-overall-header\" id=\"overall-list\">Overall: </p>";
+        let dataListMen = "<p class=\"top-months-overall-header\" id=\"men-list\">Men: </p>";
+        let dataListWomen = "<p class=\"top-months-overall-header\" id=\"women-list\">Women: </p>";
 
+        // Set the title for the top months list
+        let title = data[0].title;
+        let titleString = `<h3 class=\"top-months-list-header\">${title}</h3><hr class=\"below-text-list\">`
+        document.getElementById("top-months-list-header").innerHTML = titleString;
+
+        // Add innerHTML for top months with highest overall unemployment rate
         for (let i=0; i < top10OverallDates.length; i++) {
-            dataListOverall += `<p class=\"top-10-list-element\">${top10OverallDates[i]}: ${top10OverallRates[i]}%</p>`;
+            dataListOverall += `<p class=\"top-months-list-element\">${top10OverallDates[i]}: ${top10OverallRates[i]}%</p>`;
         };
+
         objList=  dataListOverall;
-        document.getElementById("top-10-left").innerHTML = objList;
-
-        for (let i=0; i < top10OverallDates.length; i++) {
-            dataListMen += `<p class=\"top-10-list-element\">${top10MenDates[i]}: ${top10MenRates[i]}%</p>`;
+        document.getElementById("top-months-left").innerHTML = objList;
+ 
+        // Add innerHTML for top months with highest unemployment rate for men
+        for (let i=0; i < top10MenDates.length; i++) {
+            dataListMen += `<p class=\"top-months-list-element\">${top10MenDates[i]}: ${top10MenRates[i]}%</p>`;
         };
+
         objList =  dataListMen;
-        document.getElementById("top-10-right").innerHTML = objList;
+        document.getElementById("top-months-right").innerHTML = objList;
 
-        for (let i=0; i < top10OverallDates.length; i++) {
-            dataListWomen += `<p class=\"top-10-list-element\">${top10WomenDates[i]}: ${top10WomenRates[i]}%</p>`;
+        // Add innerHTML for top months with highest unemployment rate for women
+        for (let i=0; i < top10WomenDates.length; i++) {
+            dataListWomen += `<p class=\"top-months-list-element\">${top10WomenDates[i]}: ${top10WomenRates[i]}%</p>`;
         };
+
         objList =  dataListWomen;
-        document.getElementById("top-10-right").innerHTML += objList;
+        document.getElementById("top-months-right").innerHTML += objList;
     })
 }
+
+//--------------------------------------------------------------------------------------------------------------
+//------------------- Function that graphs the line graph for yearly differentials -----------------------------
+//--------------------------------------------------------------------------------------------------------------
+function yearlyDifferentialLineChart(startDate = initParams[0], endDate = initParams[1], filter = initParams[2], oldChart) {
+
+}
+
 
 //----------------------------------------------------------------------------------------------------------------------
 //------------------- Function that graphs all the visualizations ------------------------------------------------------
@@ -346,7 +365,7 @@ function plotOverallUnemployment() {
     // Update the graphs
     // overallUnemployment(startYear, endYear, filterData);
     overallUnemploymentChart(startYear, endYear, filterData, barChart);
-    top10UnemploymentRate(startYear, endYear, filterData);
+    topMonthsUnemploymentRate(startYear, endYear, filterData);
 }
 
 
@@ -364,7 +383,7 @@ d3.json(yearsUrl).then(data => {
 
     // overallUnemployment(initStartYear, initEndYear, initData);
     barChart = overallUnemploymentChart(initStartYear, initEndYear, initData);
-    top10UnemploymentRate(initStartYear, initEndYear, initData);
+    topMonthsUnemploymentRate(initStartYear, initEndYear, initData);
 
     // Change the graphs depending on the selected items in the dropdown list
     d3.selectAll("#dropdown-list-st-year").on("change", plotOverallUnemployment);
