@@ -7,9 +7,9 @@ initParams = ["2000", "2023", "overall_rate"]
 
 
 // optionChanged function that just returns that value
-function optionChanged(value) {
-    return value
-};
+// function optionChanged(value) {
+//     return value
+// };
 
 //----------------------------------------------------------------------------------------------------------------------
 //------------------- Function to fill the dropdown list ---------------------------------------------------------------
@@ -139,7 +139,7 @@ function fillDropdown(years, filter) {
 function overallUnemploymentChart(startDate = initParams[0], endDate = initParams[1], filter = initParams[2], oldChart) {
 
     // Get the bar-chart element from the html
-    const ctx = document.getElementById('bar-chart');
+    let ctx = document.getElementById('bar-chart');
 
     // Define the url for the data
     let urlString = `${link}y/${startDate}/${endDate}/${filter}`;
@@ -237,7 +237,7 @@ function overallUnemploymentChart(startDate = initParams[0], endDate = initParam
 
         dataGraph = {
 
-            // Keys are just the years so we use the keys from ovarallData
+            // Keys are just the years so we use the keys from overallData
             labels: Object.keys(overallData),
             datasets: [{
 
@@ -289,7 +289,7 @@ function topMonthsUnemploymentRate(startDate = initParams[0], endDate = initPara
 
 
     d3.json(urlString).then(data => {
-        
+
         // List of top 10 months for the years and data chosen for overall, men and women
         let top10OverallDates = Object.keys(data[0].overall);
         let top10OverallRates = Object.values(data[0].overall);
@@ -313,27 +313,27 @@ function topMonthsUnemploymentRate(startDate = initParams[0], endDate = initPara
         document.getElementById("top-months-list-header").innerHTML = titleString;
 
         // Add innerHTML for top months with highest overall unemployment rate
-        for (let i=0; i < top10OverallDates.length; i++) {
+        for (let i = 0; i < top10OverallDates.length; i++) {
             dataListOverall += `<p class=\"top-months-list-element\">${top10OverallDates[i]}: ${top10OverallRates[i]}%</p>`;
         };
 
-        objList=  dataListOverall;
+        objList = dataListOverall;
         document.getElementById("top-months-left").innerHTML = objList;
- 
+
         // Add innerHTML for top months with highest unemployment rate for men
-        for (let i=0; i < top10MenDates.length; i++) {
+        for (let i = 0; i < top10MenDates.length; i++) {
             dataListMen += `<p class=\"top-months-list-element\">${top10MenDates[i]}: ${top10MenRates[i]}%</p>`;
         };
 
-        objList =  dataListMen;
+        objList = dataListMen;
         document.getElementById("top-months-right").innerHTML = objList;
 
         // Add innerHTML for top months with highest unemployment rate for women
-        for (let i=0; i < top10WomenDates.length; i++) {
+        for (let i = 0; i < top10WomenDates.length; i++) {
             dataListWomen += `<p class=\"top-months-list-element\">${top10WomenDates[i]}: ${top10WomenRates[i]}%</p>`;
         };
 
-        objList =  dataListWomen;
+        objList = dataListWomen;
         document.getElementById("top-months-right").innerHTML += objList;
     })
 }
@@ -342,8 +342,202 @@ function topMonthsUnemploymentRate(startDate = initParams[0], endDate = initPara
 //------------------- Function that graphs the line graph for yearly differentials -----------------------------
 //--------------------------------------------------------------------------------------------------------------
 function yearlyDifferentialLineChart(startDate = initParams[0], endDate = initParams[1], filter = initParams[2], oldChart) {
+    // Get the bar-chart element from the html
+    let ctx = document.getElementById('line-graph');
 
+    // Define the url for the data
+    if (parseInt(startDate) === 1948) {
+        urlString = `${link}y/${startDate}/${endDate}/${filter}`;
+    }
+    else {
+        urlString = `${link}y/${startDate - 1}/${endDate}/${filter}`;
+    }
+
+    // Font sizes for title and x and y labels
+    let xyFontSize = 15
+    let titleFontSize = 25
+
+    // Deletes the oldChart if the parameter was passed
+    // This would make it so that the newly created charts dont stack on each other
+    if (oldChart !== undefined) {
+        oldChart.destroy();
+    }
+
+    // Set up a new Chart.js line graph
+    lineGraph = new Chart(ctx, {
+        type: 'line',
+        data: {},
+        options: {
+            // Want the graph to stay inside the container
+            responsive: true,
+            maintainAspectRatio: false,
+
+            plugins: {
+
+                // Configurations for the title
+                title: {
+                    color: 'black',
+                    font: {
+                        size: titleFontSize
+                    },
+                    display: true,
+                    text: ''
+                },
+
+                legend: {
+                    labels: {
+                        color: 'black'
+                    }
+                }
+            },
+
+            scales: {
+
+                // Configurations for y axis
+                y: {
+                    title: {
+                        color: 'black',
+                        font: {
+                            size: xyFontSize
+                        },
+                        display: true,
+                        text: 'Unemployment Rate Differential from Previous Year (%)'
+                    },
+                    // beginAtZero: true,
+
+                    ticks: {
+                        color: 'black'
+                    },
+
+                    grid: {
+                        color: line => line.tick.value == 0 ? "#620000" : Chart.defaults.borderColor,
+                        lineWidth: 2
+                    }
+                },
+
+                // Configurations for x axis
+                x: {
+
+                    // Labels
+                    title: {
+                        color: 'black',
+                        font: {
+                            size: xyFontSize
+                        },
+                        display: true,
+                        text: 'Year(s)'
+                    },
+                    // We do not want to display the x gridlines
+                    grid: {
+                        display: false,
+                        color: line => line.tick.value == 0 ? "#620000" : Chart.defaults.borderColor
+                        
+                    },
+
+                    ticks: {
+                        color: 'black'
+                    }
+                }
+            },
+        }
+    });
+
+    // Here, we access the data from the url then fill in the data we need for the bar graph
+    d3.json(urlString).then(data => {
+
+
+        let overallDiff = [];
+        let menDiff = [];
+        let womenDiff = [];
+        for (let i = 0; i < Object.values(data[0].overall).length; i++) {
+
+            // If the start date selected is 1948 which is the start of the dataset, we just add 0
+            if (parseInt(Object.keys(data[0].overall)[i]) === 1948) {
+                overallDiff.push(0);
+                menDiff.push(0);
+                womenDiff.push(0);
+            }
+
+            else {
+                // Store the differential for overall unemployment rate into a variable
+                overallDiff.push(Object.values(data[0].overall)[i + 1] - Object.values(data[0].overall)[i]);
+
+                // Store the differential for men unemployment rate into a variable
+                menDiff.push(Object.values(data[0].men)[i + 1] - Object.values(data[0].men)[i]);
+
+                // Store the differential for women unemployment rate into a variable
+                womenDiff.push(Object.values(data[0].women)[i + 1] - Object.values(data[0].women)[i]);
+            }
+        }
+
+
+        // Store the Objects into variables to graph later
+        let years = Object.keys(data[0].overall);
+
+        // Remove the first element
+        years.shift()
+
+        dataGraph = {
+
+            // Keys are just the years so we use the keys from overallData
+            labels: years,
+            datasets: [{
+
+                // Overall data
+                label: 'Differential for Overall Unemployment rate',
+                data: overallDiff,
+                borderWidth: 1,
+                borderColor: '#077557',
+                backgroundColor: '#077557',
+                tension: 0.3,
+                pointRadius: 2
+            },
+            {
+                // Men data
+                label: 'Differential for Men Unemployment rate',
+                data: menDiff,
+                borderWidth: 1,
+                borderColor: '#0369ad',
+                backgroundColor: '#0369ad',
+                tension: 0.3,
+                pointRadius: 2
+            },
+            {
+                // Women data
+                label: 'Differential Women Unemployment rate',
+                data: womenDiff,
+                borderWidth: 1,
+                borderColor: '#fa3754',
+                backgroundColor: '#fa3754',
+                tension: 0.3,
+                pointRadius: 2
+            }
+            ]
+        }
+
+        // Update the graph with the data
+        d3.json(yearsUrl).then(data => {
+
+            // Titles for the graph if the chosen 'Age Range' is Overall Rate
+            if (document.getElementById('dropdown-list-data').value === 'overall_rate') {
+                lineGraph.options.plugins.title.text = `Overall Unemployment Rate Differential from ${startDate} to ${endDate}`;
+            }
+
+            // Title includes age range otherwise
+            else {
+                lineGraph.options.plugins.title.text = `Unemployment Rate Differential from ${startDate} to ${endDate} for ${data[0].data[document.getElementById('dropdown-list-data').value]}`;
+            }
+
+            lineGraph.data = dataGraph;
+            lineGraph.update();
+        })
+    })
+
+    // Return the newly created chart
+    // This is so that we can delete this chart when we call the function again to graph a new chart 
+    return lineGraph
 }
+
 
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -366,6 +560,7 @@ function plotOverallUnemployment() {
     // overallUnemployment(startYear, endYear, filterData);
     overallUnemploymentChart(startYear, endYear, filterData, barChart);
     topMonthsUnemploymentRate(startYear, endYear, filterData);
+    yearlyDifferentialLineChart(startYear, endYear, filterData, lineGraph)
 }
 
 
@@ -384,6 +579,7 @@ d3.json(yearsUrl).then(data => {
     // overallUnemployment(initStartYear, initEndYear, initData);
     barChart = overallUnemploymentChart(initStartYear, initEndYear, initData);
     topMonthsUnemploymentRate(initStartYear, initEndYear, initData);
+    lineGraph = yearlyDifferentialLineChart(initStartYear, initEndYear, initData)
 
     // Change the graphs depending on the selected items in the dropdown list
     d3.selectAll("#dropdown-list-st-year").on("change", plotOverallUnemployment);
