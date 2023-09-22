@@ -4,10 +4,10 @@
 The goal of this project was to create a dynamic HTML dashboard to analyze the unemployment rates in the U.S. from years 1948 to 2023. The visualizations 
 included are a bar graph that shows the average unemployment rate per year based on  the selected start year, end year and filter (These are either the overall rate or an age range).
 I also included a line graph showing the change of unemployment rate per year compared to the previous year. I also have a list of top months with the highest unemployment rate depending on the starting, ending and
-filter (age range). The line graph and bar graph are plotted using Chart.js
+filter (age range). The line graph and bar graph are plotted using Chart.js. I used Flask and SQLALchemy to create an API.
 
 ## How to Use
-In order to run the project, you would need an internet browser (I use Chrome), Python (I have version 3.10.13 installed) and Allow CORS browser extension (https://mybrowseraddon.com/access-control-allow-origin.html) 
+In order to run the project, you would need an internet browser (I use Chrome), Python (I have version 3.10.13 installed. Also need to import Flask and sqlalchemy modules) and Allow CORS browser extension (https://mybrowseraddon.com/access-control-allow-origin.html) 
 1. Clone the repo into your computer.
 2. Run app.py (This initializes the Flask app to access the API for the data. What I do is open a terminal in the us-unemployment-analysis directory and run the python file)
 3. Run index.html and make sure the Allow CORS extension is toggled on.
