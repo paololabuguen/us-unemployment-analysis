@@ -21,4 +21,4 @@ https://www.kaggle.com/datasets/guillemservera/us-unemployment-rates?select=df_u
 
 ## Credits
 As this is my first solo project, there was a lot of information I had to learn making it. Credits to developers of Chart.js, contributors of stackoverflow as I had to lookup solutions on how to make Chart.js work and how CSS and HTML work together.
-Also, I took some code from the UofT data bootcamp lectures when I was taking them to help create app.py.
+I also took some code from the UofT data bootcamp lectures when I was taking them to help create app.py. Lastly, ChatGPT for the CSS and HTML template code.
