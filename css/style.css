@@ -22,6 +22,7 @@ body {
     height: 80vh;
     max-height: 1000px;
     width: 100%;
+    max-width: 1000px;
     display: grid;
     grid-template-columns: 1fr 1fr; 
     grid-gap: 3vw;
@@ -67,6 +68,7 @@ body {
 /* Dropdown label */
 .dropdown-list-label {
     padding: 5px;
+    font-size: 14px;
 }
 
 /* Dropdowns */
