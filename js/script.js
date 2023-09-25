@@ -5,12 +5,6 @@ let yearsUrl = "http://127.0.0.1:5000/api/v1.0/year_data_list"
 // Initial parameters for graphing functions
 initParams = ["2000", "2023", "overall_rate"]
 
-
-// optionChanged function that just returns that value
-// function optionChanged(value) {
-//     return value
-// };
-
 //----------------------------------------------------------------------------------------------------------------------
 //------------------- Function to fill the dropdown list ---------------------------------------------------------------
 //----------------------------------------------------------------------------------------------------------------------
@@ -430,7 +424,6 @@ function yearlyDifferentialLineChart(startDate = initParams[0], endDate = initPa
                     // We do not want to display the x gridlines
                     grid: {
                         display: false,
-                        color: line => line.tick.value == 0 ? "#620000" : Chart.defaults.borderColor
                         
                     },
 
@@ -537,7 +530,6 @@ function yearlyDifferentialLineChart(startDate = initParams[0], endDate = initPa
     // This is so that we can delete this chart when we call the function again to graph a new chart 
     return lineGraph
 }
-
 
 
 //----------------------------------------------------------------------------------------------------------------------
